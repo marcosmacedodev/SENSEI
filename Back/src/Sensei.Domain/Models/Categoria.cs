@@ -7,5 +7,6 @@ namespace Sensei.Domain.Models
     {
         public int Id { get; set; }
         public string Nome { get; set; }
+        public ICollection<CategoriaProduto> CategoriaProdutos { get; set; }
     }
 }
