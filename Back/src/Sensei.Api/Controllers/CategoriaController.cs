@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sensei.App.Contracts;
+using Sensei.Domain.Dtos;
 using Sensei.Domain.Models;
 
 namespace Sensei.Api.Controllers
@@ -18,7 +19,7 @@ namespace Sensei.Api.Controllers
         {
             Categoria categoria = await _categoriaService.GetCategoriaById(id, true);
             if (categoria == null) return NotFound();
-            return Ok(categoria);
+            return Ok((CategoriaDto)categoria);
         }
 
         [HttpGet]
@@ -26,15 +27,15 @@ namespace Sensei.Api.Controllers
         {
             Categoria[] categorias = await _categoriaService.GetCategorias(true);
             if (categorias == null || categorias.Length <= 0) return NoContent();
-            return Ok(categorias);
+            return Ok(categorias.Select(cat => (CategoriaDto)cat));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Categoria entity){
+        public async Task<IActionResult> Update(int id, CategoriaDto entity){
             Categoria categoria = await _categoriaService.GetCategoriaById(id, false);
             if (categoria == null) return NotFound();
             entity.Id = id;
-            categoria = await _categoriaService.SaveCategoria(entity);
+            categoria = await _categoriaService.SaveCategoria((Categoria)entity);
             if(categoria == null) return BadRequest();
             return NoContent();
         }
@@ -50,9 +51,9 @@ namespace Sensei.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Categoria entity)
+        public async Task<IActionResult> Create(CategoriaDto entity)
         {
-            entity = await _categoriaService.AddCategoria(entity);
+            entity = (CategoriaDto)await _categoriaService.AddCategoria((Categoria) entity);
             if (entity == null) return BadRequest();
             return this.Created("", entity);
         }
