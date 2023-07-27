@@ -21,6 +21,7 @@ namespace Sensei.App.Services
         {
             try
             {
+                entity.Id = 0;
                 _repository.Add<Categoria>(entity);
                 if(await _repository.SaveChangesAsync())
                 {

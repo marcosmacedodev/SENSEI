@@ -54,7 +54,7 @@ namespace Sensei.Persistence.DataContext
                 opt.HasOne<Endereco>(ped => ped.Endereco)
                                         .WithOne()
                                         .HasForeignKey<Pedido>(ped => ped.EnderecoId);
-                opt.HasOne<Pagamento>(ped => ped.Pagamento).WithOne(pag => pag.Pedido).HasForeignKey<Pagamento>(pag => pag.Id).HasPrincipalKey<Pagamento>(pag => pag.Id);
+                opt.HasOne<Pagamento>(ped => ped.Pagamento).WithOne(pag => pag.Pedido).HasForeignKey<Pagamento>(pag => pag.Id);
             });
 
             //Associação entre Endereco e Cidade
