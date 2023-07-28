@@ -1,11 +1,15 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Sensei.Domain.Models;
 
 namespace Sensei.Persistence.DataContext
 {
     public class Context: DbContext
     {
-        public Context(DbContextOptions<Context> options): base(options){}
+        private readonly IConfiguration _config;
+        public Context(IConfiguration config){
+            _config = config;
+        }
 
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
@@ -65,6 +69,13 @@ namespace Sensei.Persistence.DataContext
             //Associação entre Cidade e Estado
             modelBuilder.Entity<Estado>().HasMany<Cidade>(est => est.Cidades).WithOne(cid => cid.Estado).HasForeignKey(cid => cid.EstadoId);
             
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            string conn = _config.GetConnectionString("MySqlConnection");
+            optionsBuilder.UseMySql(conn, ServerVersion.AutoDetect(conn));
         }
     }
 

@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<Context>(opt => opt.UseInMemoryDatabase("senseidb"));
+builder.Services.AddDbContext<Context>();
 
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IRepositoryCategoria, RepositoryCategoria>();

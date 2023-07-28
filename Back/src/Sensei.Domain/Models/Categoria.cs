@@ -14,7 +14,7 @@ namespace Sensei.Domain.Models
             return new Categoria(){
                 Id = categoria.Id,
                 Nome = categoria.Nome,
-                CategoriaProdutos = categoria.CategoriaProdutos
+                //CategoriaProdutos = categoria.CategoriaProdutos
             }; 
         }
     }
