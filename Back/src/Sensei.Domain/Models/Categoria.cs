@@ -13,7 +13,8 @@ namespace Sensei.Domain.Models
         public static explicit operator Categoria(CategoriaDto categoria){
             return new Categoria(){
                 Id = categoria.Id,
-                Nome = categoria.Nome
+                Nome = categoria.Nome,
+                CategoriaProdutos = categoria.CategoriaProdutos
             }; 
         }
     }

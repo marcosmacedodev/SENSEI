@@ -48,7 +48,9 @@ namespace Sensei.Persistence.DataContext
                     .WithOne(peds => peds.Cliente)
                     .HasForeignKey(ped => ped.ClienteId);
                 opt.HasMany<Endereco>(cli => cli.Enderecos)
-                    .WithOne(ends => ends.Cliente).HasForeignKey(end => end.ClienteId);
+                    .WithOne(end => end.Cliente)
+                    .HasForeignKey(end => end.ClienteId);
+                
             });
             //Associação entre Pedido e Endereco
             modelBuilder.Entity<Pedido>(opt => {

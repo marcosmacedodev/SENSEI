@@ -17,6 +17,7 @@ namespace Sensei.Persistence.Services
             IQueryable<Cliente> query =_context.Clientes
             .Include(cli => cli.Enderecos)
             .Include(cli => cli.Pedidos)
+            //.Include(cli => cli.Telefones)
             .Where(cli => cli.Id.Equals(id))
             .AsNoTracking();
             return await query.FirstOrDefaultAsync();
@@ -27,6 +28,7 @@ namespace Sensei.Persistence.Services
             IQueryable<Cliente> query =_context.Clientes
             .Include(cli => cli.Enderecos)
             .Include(cli => cli.Pedidos)
+            //.Include(cli => cli.Telefones)
             .OrderBy(cli => cli.Id)
             .AsNoTracking();
             return await query.ToArrayAsync();
