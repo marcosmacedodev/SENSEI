@@ -13,8 +13,12 @@ builder.Services.AddDbContext<Context>(opt => opt.UseInMemoryDatabase("senseidb"
 
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IRepositoryCategoria, RepositoryCategoria>();
+builder.Services.AddScoped<IRepositoryProduto, RepositoryProduto>();
+builder.Services.AddScoped<IRepositoryCliente, RepositoryCliente>();
 
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

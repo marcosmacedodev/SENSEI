@@ -26,7 +26,7 @@ namespace Sensei.Api.Controllers
         public async Task<IActionResult> GetAll()
         {
             Categoria[] categorias = await _categoriaService.GetCategorias(true);
-            if (categorias == null || categorias.Length <= 0) return NoContent();
+            if (categorias?.Length == 0) return NoContent();
             return Ok(categorias.Select(cat => (CategoriaDto)cat));
         }
 

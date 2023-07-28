@@ -16,6 +16,7 @@ namespace Sensei.Persistence.DataContext
         public DbSet<Cidade> Cidades { get; set; }
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Pagamento> Pagamentos { get; set; }
+        public DbSet<CategoriaProduto> CategoriaProdutos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
