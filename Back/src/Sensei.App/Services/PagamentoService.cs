@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Sensei.App.Contracts;
+using Sensei.Domain.Dtos;
 using Sensei.Domain.Models;
 using Sensei.Persistence.Contracts;
 
@@ -12,20 +10,23 @@ namespace Sensei.App.Services
     {
         private readonly IRepositoryPagamento _repositoryPagamento;
         private readonly IRepository _repository;
-        public PagamentoService(IRepository repository, IRepositoryPagamento repositoryPagamento)
+        private readonly IMapper _mapper;
+        public PagamentoService(IRepository repository, IRepositoryPagamento repositoryPagamento, IMapper mapper)
         {
+            _mapper = mapper;
             _repository = repository;
             _repositoryPagamento = repositoryPagamento;
         }
 
-        public async Task<Pagamento> AddPagamento(Pagamento entity)
+        public async Task<PagamentoDto> AddPagamento(PagamentoDto pagamentoDto)
         {
             try
             {
-                entity.Id = 0;
+                Pagamento entity = _mapper.Map<Pagamento>(pagamentoDto);
                 _repository.Add<Pagamento>(entity);
                 if(await _repository.SaveChangesAsync()){
-                    return await _repositoryPagamento.GetPagamentoById(entity.Id);
+                    entity = await _repositoryPagamento.GetPagamentoById(entity.PedidoId);
+                    return _mapper.Map<PagamentoDto>(entity);
                 }
                 return null;
             }
@@ -35,10 +36,11 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<bool> DeletePagamento(Pagamento entity)
+        public async Task<bool> DeletePagamento(PagamentoDto pagamentoDto)
         {
             try
             {
+                Pagamento entity = _mapper.Map<Pagamento>(pagamentoDto);
                 _repository.Delete<Pagamento>(entity);
                 return await _repository.SaveChangesAsync();
             }
@@ -48,12 +50,12 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<Pagamento> GetPagamentoById(int id)
+        public async Task<PagamentoDto> GetPagamentoById(int id)
         {
             try
             {
-                Pagamento pagamento = await _repositoryPagamento.GetPagamentoById(id);
-                return pagamento;
+                Pagamento entity = await _repositoryPagamento.GetPagamentoById(id);
+                return _mapper.Map<PagamentoDto>(entity);
             }
             catch (Exception ex)
             {
@@ -61,12 +63,12 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<Pagamento[]> GetPagamentos()
+        public async Task<PagamentoDto[]> GetPagamentos()
         {
            try
            {
-                Pagamento[] pagamentos = await _repositoryPagamento.GetPagamentos();
-                return pagamentos;
+                Pagamento[] entities = await _repositoryPagamento.GetPagamentos();
+                return _mapper.Map<PagamentoDto[]>(entities);
            }
            catch (Exception ex)
            {
@@ -74,13 +76,15 @@ namespace Sensei.App.Services
            }
         }
 
-        public async Task<Pagamento> SavePagamento(Pagamento entity)
+        public async Task<PagamentoDto> SavePagamento(PagamentoDto pagamentoDto)
         {
             try
             {
+                Pagamento entity = _mapper.Map<Pagamento>(pagamentoDto);
                 _repository.Update(entity);
                 if(await _repository.SaveChangesAsync()){
-                    return await _repositoryPagamento.GetPagamentoById(entity.Id);
+                    entity = await _repositoryPagamento.GetPagamentoById(entity.PedidoId);
+                    return _mapper.Map<PagamentoDto>(entity);
                 }
                 return null;
             }

@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Sensei.App.Contracts;
+using Sensei.Domain.Dtos;
 using Sensei.Domain.Models;
 using Sensei.Persistence.Contracts;
 
@@ -12,20 +10,23 @@ namespace Sensei.App.Services
     {
         private readonly IRepositoryCidade _repositoryCidade;
         private readonly IRepository _repository;
-        public CidadeService(IRepository repository, IRepositoryCidade repositoryCidade)
+        private readonly IMapper _mapper;
+        public CidadeService(IRepository repository, IRepositoryCidade repositoryCidade, IMapper mapper)
         {
+            _mapper = mapper;
             _repository = repository;
             _repositoryCidade = repositoryCidade;
         }
 
-        public async Task<Cidade> AddCidade(Cidade entity)
+        public async Task<CidadeDto> AddCidade(CidadeDto cidadeDto)
         {
             try
             {
-                entity.Id = 0;
+                Cidade entity = _mapper.Map<Cidade>(cidadeDto);
                 _repository.Add<Cidade>(entity);
                 if(await _repository.SaveChangesAsync()){
-                    return await _repositoryCidade.GetCidadeById(entity.Id);
+                    entity = await _repositoryCidade.GetCidadeById(entity.Id);
+                    return _mapper.Map<CidadeDto>(entity);
                 }
                 return null;
             }
@@ -35,10 +36,11 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<bool> DeleteCidade(Cidade entity)
+        public async Task<bool> DeleteCidade(CidadeDto cidadeDto)
         {
             try
             {
+                Cidade entity = _mapper.Map<Cidade>(cidadeDto);
                 _repository.Delete<Cidade>(entity);
                 return await _repository.SaveChangesAsync();
             }
@@ -48,12 +50,12 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<Cidade> GetCidadeById(int id)
+        public async Task<CidadeDto> GetCidadeById(int id)
         {
             try
             {
-                Cidade cidade = await _repositoryCidade.GetCidadeById(id);
-                return cidade;
+                Cidade entity = await _repositoryCidade.GetCidadeById(id);
+                return _mapper.Map<CidadeDto>(entity);
             }
             catch (Exception ex)
             {
@@ -61,12 +63,12 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<Cidade[]> GetCidades()
+        public async Task<CidadeDto[]> GetCidades()
         {
            try
            {
-                Cidade[] cidades = await _repositoryCidade.GetCidades();
-                return cidades;
+                Cidade[] entities = await _repositoryCidade.GetCidades();
+                return _mapper.Map<CidadeDto[]>(entities);
            }
            catch (Exception ex)
            {
@@ -74,13 +76,15 @@ namespace Sensei.App.Services
            }
         }
 
-        public async Task<Cidade> SaveCidade(Cidade entity)
+        public async Task<CidadeDto> SaveCidade(CidadeDto cidadeDto)
         {
             try
             {
+                Cidade entity = _mapper.Map<Cidade>(cidadeDto);
                 _repository.Update(entity);
                 if(await _repository.SaveChangesAsync()){
-                    return await _repositoryCidade.GetCidadeById(entity.Id);
+                    entity = await _repositoryCidade.GetCidadeById(entity.Id);
+                    return _mapper.Map<CidadeDto>(entity);
                 }
                 return null;
             }

@@ -7,8 +7,8 @@ namespace Sensei.Persistence.Services
 {
     public class RepositoryCategoria : IRepositoryCategoria
     {
-        private readonly Context _context;
-        public RepositoryCategoria(Context context){
+        private readonly SenseiContext _context;
+        public RepositoryCategoria(SenseiContext context){
             _context = context;
         }
         public async Task<Categoria> GetCategoriaById(int id, bool includeProdutos)

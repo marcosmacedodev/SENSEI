@@ -1,15 +1,15 @@
 using Sensei.Persistence.DataContext;
-using Microsoft.EntityFrameworkCore;
 using Sensei.Persistence.Contracts;
 using Sensei.Persistence.Services;
 using Sensei.App.Contracts;
 using Sensei.App.Services;
+using Sensei.App.SenseiMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<Context>();
+builder.Services.AddDbContext<SenseiContext>();
 
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IRepositoryCategoria, RepositoryCategoria>();
@@ -24,6 +24,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAutoMapper(typeof(SenseiMapper));
 
 var app = builder.Build();
 

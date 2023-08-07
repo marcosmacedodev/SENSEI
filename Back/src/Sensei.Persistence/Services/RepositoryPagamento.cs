@@ -8,16 +8,16 @@ namespace Sensei.Persistence.Services
 {
     public class RepositoryPagamento : IRepositoryPagamento
     {
-        private readonly Context _context;
-        public RepositoryPagamento(Context context)
+        private readonly SenseiContext _context;
+        public RepositoryPagamento(SenseiContext context)
         {
             _context = context;
         }
-        public async Task<Pagamento> GetPagamentoById(int? id)
+        public async Task<Pagamento> GetPagamentoById(int id)
         {
             IQueryable<Pagamento> query = _context.Pagamentos
 
-            .Where(pag => pag.Id.Equals(id))
+            .Where(pag => pag.PedidoId.Equals(id))
             .AsNoTracking();
             return await query.FirstOrDefaultAsync();
         }
@@ -26,7 +26,7 @@ namespace Sensei.Persistence.Services
         {
             IQueryable<Pagamento> query = _context.Pagamentos
 
-            .OrderBy(pag => pag.Id)
+            .OrderBy(pag => pag.PedidoId)
             .AsNoTracking();
             return await query.ToArrayAsync();
         }

@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Sensei.Domain.Models;
+using Sensei.Domain.Dtos;
 
 namespace Sensei.App.Contracts
 {
     public interface IClienteService
     {
-        Task<Cliente[]> GetClientes();
-        Task<Cliente> GetClienteById(int id);
-        Task<Cliente> AddCliente(Cliente entity);
-        Task<Cliente> SaveCliente(Cliente entity);
-        Task<bool> DeleteCliente(Cliente entity);
+        Task<ClienteDto[]> GetClientes();
+        Task<ClienteDto> GetClienteById(int id);
+        Task<ClienteDto> AddCliente(ClienteDto clienteDto);
+        Task<ClienteDto> SaveCliente(ClienteDto clienteDto);
+        Task<bool> DeleteCliente(ClienteDto clienteDto);
     }
 }

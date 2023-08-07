@@ -2,16 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Sensei.Domain.Dtos;
 using Sensei.Domain.Models;
 
 namespace Sensei.App.Contracts
 {
     public interface ICategoriaService
     {
-        Task<Categoria> AddCategoria(Categoria entity);
-        Task<Categoria> SaveCategoria(Categoria entity);
-        Task<bool> DeleteCategoria(Categoria entity);
-        Task<Categoria> GetCategoriaById(int id, bool includeProdutos);
-        Task<Categoria[]> GetCategorias(bool includeProdutos);
+        Task<CategoriaDto> AddCategoria(CategoriaDto categoriaDto);
+        Task<CategoriaDto> SaveCategoria(CategoriaDto categoriaDto);
+        Task<bool> DeleteCategoria(CategoriaDto categoriaDto);
+        Task<CategoriaDto> GetCategoriaById(int id, bool includeProdutos);
+        Task<CategoriaDto[]> GetCategorias(bool includeProdutos);
     }
 }

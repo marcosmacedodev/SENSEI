@@ -1,7 +1,3 @@
-
-
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace Sensei.Domain.Models
 {
     public class CategoriaProduto

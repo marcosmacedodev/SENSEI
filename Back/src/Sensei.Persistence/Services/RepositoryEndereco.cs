@@ -8,8 +8,8 @@ namespace Sensei.Persistence.Services
 {
     public class RepositoryEndereco : IRepositoryEndereco
     {
-        private readonly Context _context;
-        public RepositoryEndereco(Context context)
+        private readonly SenseiContext _context;
+        public RepositoryEndereco(SenseiContext context)
         {
             _context = context;
             

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using Sensei.Domain.Models;
 
 namespace Sensei.Persistence.Contracts
 {
@@ -15,5 +16,6 @@ namespace Sensei.Persistence.Contracts
         Task<bool> SaveChangesAsync();
         void Delete<T>(T entity) where T: class;
         void DeleteRange<T>(T[] entities) where T: class;
+        Task<bool> FindByIdAsync<T>(int id);
     }
 }

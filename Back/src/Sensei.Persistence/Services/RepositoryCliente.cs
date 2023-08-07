@@ -7,8 +7,8 @@ namespace Sensei.Persistence.Services
 {
     public class RepositoryCliente : IRepositoryCliente
     {
-        private readonly Context _context;
-        public RepositoryCliente(Context context){
+        private readonly SenseiContext _context;
+        public RepositoryCliente(SenseiContext context){
             _context = context;
         }
 

@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Sensei.App.Contracts;
+using Sensei.Domain.Dtos;
 using Sensei.Domain.Models;
 using Sensei.Persistence.Contracts;
 
@@ -12,20 +10,23 @@ namespace Sensei.App.Services
     {
         private readonly IRepositoryPedido _repositoryPedido;
         private readonly IRepository _repository;
-        public PedidoService(IRepository repository, IRepositoryPedido repositoryPedido)
+        private readonly IMapper _mapper;
+        public PedidoService(IRepository repository, IRepositoryPedido repositoryPedido, IMapper mapper)
         {
+            _mapper = mapper;
             _repository = repository;
             _repositoryPedido = repositoryPedido;
         }
 
-        public async Task<Pedido> AddPedido(Pedido entity)
+        public async Task<PedidoDto> AddPedido(PedidoDto pedidoDto)
         {
             try
             {
-                entity.Id = 0;
+                Pedido entity = _mapper.Map<Pedido>(pedidoDto);
                 _repository.Add<Pedido>(entity);
                 if(await _repository.SaveChangesAsync()){
-                    return await _repositoryPedido.GetPedidoById(entity.Id, false);
+                    entity = await _repositoryPedido.GetPedidoById(entity.Id, false);
+                    return _mapper.Map<PedidoDto>(entity);
                 }
                 return null;
             }
@@ -35,10 +36,11 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<bool> DeletePedido(Pedido entity)
+        public async Task<bool> DeletePedido(PedidoDto pedidoDto)
         {
             try
             {
+                Pedido entity = _mapper.Map<Pedido>(pedidoDto);
                 _repository.Delete<Pedido>(entity);
                 return await _repository.SaveChangesAsync();
             }
@@ -48,12 +50,12 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<Pedido> GetPedidoById(int id, bool includeProdutos)
+        public async Task<PedidoDto> GetPedidoById(int id, bool includeProdutos)
         {
             try
             {
-                Pedido Pedido = await _repositoryPedido.GetPedidoById(id, false);
-                return Pedido;
+                Pedido entity = await _repositoryPedido.GetPedidoById(id, false);
+                return _mapper.Map<PedidoDto>(entity);
             }
             catch (Exception ex)
             {
@@ -61,12 +63,12 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<Pedido[]> GetPedidos(bool includeProdutos)
+        public async Task<PedidoDto[]> GetPedidos(bool includeProdutos)
         {
            try
            {
-                Pedido[] Pedidos = await _repositoryPedido.GetPedidos(includeProdutos);
-                return Pedidos;
+                Pedido[] entities = await _repositoryPedido.GetPedidos(includeProdutos);
+                return _mapper.Map<PedidoDto[]>(entities);
            }
            catch (Exception ex)
            {
@@ -74,13 +76,15 @@ namespace Sensei.App.Services
            }
         }
 
-        public async Task<Pedido> SavePedido(Pedido entity)
+        public async Task<PedidoDto> SavePedido(PedidoDto pedidoDto)
         {
             try
             {
+                Pedido entity = _mapper.Map<Pedido>(pedidoDto);
                 _repository.Update(entity);
                 if(await _repository.SaveChangesAsync()){
-                    return await _repositoryPedido.GetPedidoById(entity.Id, false);
+                    entity = await _repositoryPedido.GetPedidoById(entity.Id, false);
+                    return _mapper.Map<PedidoDto>(entity);
                 }
                 return null;
             }

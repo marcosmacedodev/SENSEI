@@ -8,8 +8,8 @@ namespace Sensei.Persistence.Services
 {
     public class RepositoryCidade : IRepositoryCidade
     {
-        private readonly Context _context;
-        public RepositoryCidade(Context context)
+        private readonly SenseiContext _context;
+        public RepositoryCidade(SenseiContext context)
         {
             _context = context;
         }

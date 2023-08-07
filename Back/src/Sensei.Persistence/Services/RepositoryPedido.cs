@@ -8,8 +8,8 @@ namespace Sensei.Persistence.Services
 {
     public class RepositoryPedido : IRepositoryPedido
     {
-        private readonly Context _context;
-        public RepositoryPedido(Context context)
+        private readonly SenseiContext _context;
+        public RepositoryPedido(SenseiContext context)
         {
             _context = context;
             
@@ -20,7 +20,7 @@ namespace Sensei.Persistence.Services
             .Include(ped => ped.Cliente)
             .Include(ped => ped.Endereco)
             .Include(ped => ped.Pagamento)
-            .Where(end => end.Id.Equals(id))
+            .Where(ped => ped.Id.Equals(id))
             .AsNoTracking();
             if(includeProdutos){
                 query = query.Include(ped => ped.ItensPedidos).ThenInclude(ip => ip.Produto);

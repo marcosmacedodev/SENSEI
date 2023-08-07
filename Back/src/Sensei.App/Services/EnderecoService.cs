@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Sensei.App.Contracts;
+using Sensei.Domain.Dtos;
 using Sensei.Domain.Models;
 using Sensei.Persistence.Contracts;
 
@@ -12,20 +10,23 @@ namespace Sensei.App.Services
     {
         private readonly IRepositoryEndereco _repositoryEndereco;
         private readonly IRepository _repository;
-        public EnderecoService(IRepository repository, IRepositoryEndereco repositoryEndereco)
+        private readonly IMapper _mapper;
+        public EnderecoService(IRepository repository, IRepositoryEndereco repositoryEndereco, IMapper mapper)
         {
+            _mapper = mapper;
             _repository = repository;
             _repositoryEndereco = repositoryEndereco;
         }
 
-        public async Task<Endereco> AddEndereco(Endereco entity)
+        public async Task<EnderecoDto> AddEndereco(EnderecoDto enderecoDto)
         {
             try
             {
-                entity.Id = 0;
+                Endereco entity = _mapper.Map<Endereco>(enderecoDto);
                 _repository.Add<Endereco>(entity);
                 if(await _repository.SaveChangesAsync()){
-                    return await _repositoryEndereco.GetEnderecoById(entity.Id);
+                    entity = await _repositoryEndereco.GetEnderecoById(entity.Id);
+                    return _mapper.Map<EnderecoDto>(entity);
                 }
                 return null;
             }
@@ -35,10 +36,11 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<bool> DeleteEndereco(Endereco entity)
+        public async Task<bool> DeleteEndereco(EnderecoDto enderecoDto)
         {
             try
             {
+                Endereco entity = _mapper.Map<Endereco>(enderecoDto);
                 _repository.Delete<Endereco>(entity);
                 return await _repository.SaveChangesAsync();
             }
@@ -48,12 +50,12 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<Endereco> GetEnderecoById(int id)
+        public async Task<EnderecoDto> GetEnderecoById(int id)
         {
             try
             {
-                Endereco endereco = await _repositoryEndereco.GetEnderecoById(id);
-                return endereco;
+                Endereco entity = await _repositoryEndereco.GetEnderecoById(id);
+                return _mapper.Map<EnderecoDto>(entity);
             }
             catch (Exception ex)
             {
@@ -61,12 +63,12 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<Endereco[]> GetEnderecos()
+        public async Task<EnderecoDto[]> GetEnderecos()
         {
            try
            {
-                Endereco[] enderecos = await _repositoryEndereco.GetEnderecos();
-                return enderecos;
+                Endereco[] entities = await _repositoryEndereco.GetEnderecos();
+                return _mapper.Map<EnderecoDto[]>(entities);
            }
            catch (Exception ex)
            {
@@ -74,13 +76,15 @@ namespace Sensei.App.Services
            }
         }
 
-        public async Task<Endereco> SaveEndereco(Endereco entity)
+        public async Task<EnderecoDto> SaveEndereco(EnderecoDto enderecoDto)
         {
             try
             {
+                Endereco entity = _mapper.Map<Endereco>(enderecoDto);
                 _repository.Update(entity);
                 if(await _repository.SaveChangesAsync()){
-                    return await _repositoryEndereco.GetEnderecoById(entity.Id);
+                    entity = await _repositoryEndereco.GetEnderecoById(entity.Id);
+                    return _mapper.Map<EnderecoDto>(entity);
                 }
                 return null;
             }

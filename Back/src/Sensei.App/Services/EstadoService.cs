@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Sensei.App.Contracts;
+using Sensei.Domain.Dtos;
 using Sensei.Domain.Models;
 using Sensei.Persistence.Contracts;
 
@@ -12,20 +10,23 @@ namespace Sensei.App.Services
     {
         private readonly IRepositoryEstado _repositoryEstado;
         private readonly IRepository _repository;
-        public EstadoService(IRepository repository, IRepositoryEstado repositoryEstado)
+        private readonly IMapper _mapper;
+        public EstadoService(IRepository repository, IRepositoryEstado repositoryEstado, IMapper mapper)
         {
+            _mapper = mapper;
             _repository = repository;
             _repositoryEstado = repositoryEstado;
         }
 
-        public async Task<Estado> AddEstado(Estado entity)
+        public async Task<EstadoDto> AddEstado(EstadoDto estadoDto)
         {
             try
             {
-                entity.Id = 0;
+                Estado entity = _mapper.Map<Estado>(estadoDto);
                 _repository.Add<Estado>(entity);
                 if(await _repository.SaveChangesAsync()){
-                    return await _repositoryEstado.GetEstadoById(entity.Id);
+                    entity = await _repositoryEstado.GetEstadoById(entity.Id);
+                    return _mapper.Map<EstadoDto>(entity);
                 }
                 return null;
             }
@@ -35,10 +36,11 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<bool> DeleteEstado(Estado entity)
+        public async Task<bool> DeleteEstado(EstadoDto estadoDto)
         {
             try
             {
+                Estado entity = _mapper.Map<Estado>(estadoDto);
                 _repository.Delete<Estado>(entity);
                 return await _repository.SaveChangesAsync();
             }
@@ -48,12 +50,12 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<Estado> GetEstadoById(int id)
+        public async Task<EstadoDto> GetEstadoById(int id)
         {
             try
             {
-                Estado estado = await _repositoryEstado.GetEstadoById(id);
-                return estado;
+                Estado entity = await _repositoryEstado.GetEstadoById(id);
+                return _mapper.Map<EstadoDto>(entity);
             }
             catch (Exception ex)
             {
@@ -61,12 +63,12 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<Estado[]> GetEstados()
+        public async Task<EstadoDto[]> GetEstados()
         {
            try
            {
-                Estado[] estados = await _repositoryEstado.GetEstados();
-                return estados;
+                Estado[] entities = await _repositoryEstado.GetEstados();
+                return _mapper.Map<EstadoDto[]>(entities);
            }
            catch (Exception ex)
            {
@@ -74,13 +76,15 @@ namespace Sensei.App.Services
            }
         }
 
-        public async Task<Estado> SaveEstado(Estado entity)
+        public async Task<EstadoDto> SaveEstado(EstadoDto estadoDto)
         {
             try
             {
+                Estado entity = _mapper.Map<Estado>(estadoDto);
                 _repository.Update(entity);
                 if(await _repository.SaveChangesAsync()){
-                    return await _repositoryEstado.GetEstadoById(entity.Id);
+                    entity = await _repositoryEstado.GetEstadoById(entity.Id);
+                    return _mapper.Map<EstadoDto>(entity);
                 }
                 return null;
             }

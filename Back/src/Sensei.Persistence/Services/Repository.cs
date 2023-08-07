@@ -5,8 +5,8 @@ namespace Sensei.Persistence.Services
 {
     public class Repository : IRepository
     {
-        private readonly Context _context;
-        public Repository(Context context)
+        private readonly SenseiContext _context;
+        public Repository(SenseiContext context)
         {
             _context = context;
         }
@@ -25,6 +25,11 @@ namespace Sensei.Persistence.Services
         public void DeleteRange<T>(T[] entities) where T : class
         {
             _context.RemoveRange(entities);
+        }
+
+        public async Task<bool> FindByIdAsync<T>(int id)
+        {
+            return await _context.FindAsync(typeof(T), id) != null;
         }
 
         public async Task<bool> SaveChangesAsync()

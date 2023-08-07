@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Sensei.App.Contracts;
+using Sensei.Domain.Dtos;
 using Sensei.Domain.Models;
 using Sensei.Persistence.Contracts;
 
@@ -12,19 +10,22 @@ namespace Sensei.App.Services
     {
         private readonly IRepositoryProduto _repositoryProduto;
         private readonly IRepository _repository;
-        public ProdutoService(IRepository repository, IRepositoryProduto repositoryProduto){
+        private readonly IMapper _mapper;
+        public ProdutoService(IRepository repository, IRepositoryProduto repositoryProduto, IMapper mapper){
+            _mapper = mapper;
             _repository = repository;
             _repositoryProduto = repositoryProduto;
         }
 
-        public async Task<Produto> AddProduto(Produto entity)
+        public async Task<ProdutoDto> AddProduto(ProdutoDto produtoDto)
         {
             try
             {
-                entity.Id = 0;
+                Produto entity = _mapper.Map<Produto>(produtoDto);
                 _repository.Add<Produto>(entity);
                 if(await _repository.SaveChangesAsync()){
-                    return await _repositoryProduto.GetProdutoById(entity.Id, true);
+                    entity = await _repositoryProduto.GetProdutoById(entity.Id, true);
+                    return _mapper.Map<ProdutoDto>(entity);
                 }
                 return null;
             }
@@ -34,10 +35,11 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<bool> DeleteProduto(Produto entity)
+        public async Task<bool> DeleteProduto(ProdutoDto produtoDto)
         {
             try
             {
+                Produto entity = _mapper.Map<Produto>(produtoDto);
                 _repository.Delete<Produto>(entity);
                 return await _repository.SaveChangesAsync();
             }
@@ -47,12 +49,12 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<Produto> GetProdutoById(int id, bool includeCategorias)
+        public async Task<ProdutoDto> GetProdutoById(int id, bool includeCategorias)
         {
             try
             {
-                Produto produto = await _repositoryProduto.GetProdutoById(id, includeCategorias);
-                return produto;
+                Produto entity = await _repositoryProduto.GetProdutoById(id, includeCategorias);
+                return _mapper.Map<ProdutoDto>(entity);
             }
             catch (Exception ex)
             {
@@ -60,12 +62,12 @@ namespace Sensei.App.Services
             }
         }
 
-        public async Task<Produto[]> GetProdutos(bool includeCategorias)
+        public async Task<ProdutoDto[]> GetProdutos(bool includeCategorias)
         {
            try
            {
-                Produto[] produtos = await _repositoryProduto.GetProdutos(includeCategorias);
-                return produtos;
+                Produto[] entities = await _repositoryProduto.GetProdutos(includeCategorias);
+                return _mapper.Map<ProdutoDto[]>(entities);
            }
            catch (Exception ex)
            {
@@ -73,13 +75,15 @@ namespace Sensei.App.Services
            }
         }
 
-        public async Task<Produto> SaveProduto(Produto entity)
+        public async Task<ProdutoDto> SaveProduto(ProdutoDto produtoDto)
         {
             try
             {
+                Produto entity = _mapper.Map<Produto>(produtoDto);
                 _repository.Update(entity);
                 if(await _repository.SaveChangesAsync()){
-                    return await _repositoryProduto.GetProdutoById(entity.Id, true);
+                    entity = await _repositoryProduto.GetProdutoById(entity.Id, true);
+                    return _mapper.Map<ProdutoDto>(entity);
                 }
                 return null;
             }

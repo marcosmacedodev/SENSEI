@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Sensei.Domain.Models;
 using Sensei.Persistence.Contracts;
@@ -11,8 +7,8 @@ namespace Sensei.Persistence.Services
 {
     public class RepositoryProduto : IRepositoryProduto
     {
-        private readonly Context _context;
-        public RepositoryProduto(Context context){
+        private readonly SenseiContext _context;
+        public RepositoryProduto(SenseiContext context){
             _context = context;
         }
         public async Task<Produto> GetProdutoById(int id, bool includeCategorias)

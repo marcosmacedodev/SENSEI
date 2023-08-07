@@ -8,8 +8,8 @@ namespace Sensei.Persistence.Services
 {
     public class RepositoryEstado : IRepositoryEstado
     {
-        private readonly Context _context;
-        public RepositoryEstado(Context context)
+        private readonly SenseiContext _context;
+        public RepositoryEstado(SenseiContext context)
         {
             _context = context;
             

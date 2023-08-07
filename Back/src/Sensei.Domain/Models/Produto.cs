@@ -1,8 +1,5 @@
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace Sensei.Domain.Models
 {
-    [Table("produtos")]
     public class Produto
     {
         public int Id { get; set; }
